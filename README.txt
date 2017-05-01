@@ -114,3 +114,7 @@ Instructions for a serial debug build:
 7. make install
 
 As of this writing (4/9/15), all tests in DPGTests and runTests should pass, with the exception of two of the runTests tests, one of which tests new space-time features still under development; the other appears to be a bug in mesh saving/loading disk in the case of minimum-rule meshes with vertex-conforming traces.  Note that make test won't give you granular information about which tests are failing, and it also won't run DPGTests for you; DPGTests is our old collection of tests--new tests are being added to either runTests or runSlowTests, both of which make test *does* run.  Note also that make test will only run tests in serial; for full testing of an MPI build, one will want to use mpirun on unit_tests/runTests, slow_tests/runSlowTests, and drivers/DPGTests/DPGTests.  We generally run tests on 1 or 4 MPI nodes.
+
+******** CAMELLIA MANUAL **********
+
+Version 1.0 of the Camellia Manual can be found at http://www.ipd.anl.gov/anlpubs/2016/11/130782.pdf
