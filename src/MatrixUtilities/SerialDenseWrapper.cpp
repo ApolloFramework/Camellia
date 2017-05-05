@@ -9,6 +9,7 @@
 
 #include "Intrepid_FieldContainer.hpp"
 
+#include "Epetra_Map.h"
 #include "Epetra_RowMatrix.h"
 #include "Epetra_SerialDenseMatrix.h"
 #include "Epetra_SerialDenseVector.h"

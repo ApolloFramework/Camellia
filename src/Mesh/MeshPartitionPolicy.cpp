@@ -95,7 +95,7 @@ Teuchos_CommPtr& MeshPartitionPolicy::TeuchosComm()
     }
 #else
   // if we don't have MPI, then it can only be a serial communicator
-    _TeuchosComm = MPIWrapper::TeuchosSerialComm();
+    _TeuchosComm = MPIWrapper::TeuchosCommSerial();
 #endif
   }
   return _TeuchosComm;

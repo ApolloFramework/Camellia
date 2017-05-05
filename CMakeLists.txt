@@ -31,37 +31,37 @@ if (BASIC_DEPS_REQUIRED STREQUAL "False") # If set to false, change to empty
 endif ()
 
 # Boost required for use of Trilinos
-if (WIN32)
-  find_package(SciBoost
-    COMPONENTS
-      unit_test_framework
-      program_options filesystem chrono system REQUIRED
-  )
-else ()
-  find_package(SciBoost
-    COMPONENTS
-      unit_test_framework
-      program_options filesystem thread chrono system exception REQUIRED
-  )
-endif ()
+#if (WIN32)
+#  find_package(SciBoost
+#    COMPONENTS
+#      unit_test_framework
+#      program_options filesystem chrono system REQUIRED
+#  )
+#else ()
+ # find_package(SciBoost
+ #   COMPONENTS
+ #     unit_test_framework
+ #     program_options filesystem thread chrono system exception REQUIRED
+ # )
+#endif ()
 
-if (BOOST_FOUND)
-  if (DEBUG_CMAKE)
-    message(STATUS "Boost found with includes at ${Boost_INCLUDE_DIRS}.")
-  endif ()
-  set(HAVE_BOOST 1 CACHE STRING "Whether boost found")
-else ()
-  message(STATUS "Boost not found.")
-endif ()
+#if (BOOST_FOUND)
+ # #if (DEBUG_CMAKE)
+ #   message(STATUS "Boost found with includes at ${Boost_INCLUDE_DIRS}.")
+ # endif ()
+#  set(HAVE_BOOST 1 CACHE STRING "Whether boost found")
+#else ()
+#  message(STATUS "Boost not found.")
+#endif ()
 
-if (WIN32)
-  set(WINENABLE:BOOL OFF)
-endif ()
+#if (WIN32)
+#  set(WINENABLE:BOOL OFF)
+#endif ()
 
 # Z is not a dependency on Windows
-if (NOT WIN32)
-  find_package(SciZ)
-endif ()
+#if (NOT WIN32)
+#  find_package(SciZ)
+#endif ()
 
 # Find packages
 #find_package(SciMumps)
@@ -69,7 +69,7 @@ endif ()
 #find_package(SciZ)
 #find_package(SciSz)
 #set(H5_USE_16_API 1)
-if (BOOST_FOUND)
+#if (BOOST_FOUND)
   if (ENABLE_PARALLEL)
    set(TRILINOS_BUILD trilinos-parcommio)
   else ()
@@ -92,7 +92,7 @@ if (BOOST_FOUND)
   ADD_DEFINITIONS(-DHAVE_MOAB)
   #find_package(SciNetcdf REQUIRED)
   
-endif ()
+#endif ()
 
 # Set TARGET_SUPPORTS_SHARED_LIBS -- otherwise problems building shared libs on Macs (at least)
 SET_PROPERTY(GLOBAL PROPERTY TARGET_SUPPORTS_SHARED_LIBS TRUE)
@@ -172,9 +172,9 @@ enable_testing()
 
 # Build Drivers
 add_subdirectory(drivers ${EXCLUDE_DRIVERS_FROM_ALL})
-add_subdirectory(examples)
+#add_subdirectory(examples)
 add_subdirectory(unit_tests)
-add_subdirectory(slow_tests)
+#add_subdirectory(slow_tests)
 
 # Finish up
 set(INSTALL_CONFIG_HEADERS FALSE)
