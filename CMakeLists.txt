@@ -172,7 +172,7 @@ enable_testing()
 
 # Build Drivers
 add_subdirectory(drivers ${EXCLUDE_DRIVERS_FROM_ALL})
-#add_subdirectory(examples)
+add_subdirectory(examples)
 add_subdirectory(unit_tests)
 #add_subdirectory(slow_tests)
 
