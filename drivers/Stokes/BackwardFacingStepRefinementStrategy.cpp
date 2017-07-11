@@ -10,6 +10,8 @@
 
 #include "BackwardFacingStepRefinementStrategy.h"
 
+using namespace Camellia;
+
 void BackwardFacingStepRefinementStrategy::addCorner( double x, double y )
 {
   _corners.push_back( make_pair(x,y) );

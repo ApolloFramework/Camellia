@@ -1,4 +1,4 @@
-#include "OptimalInnerProduct.h"
+#include "MathInnerProduct.h"
 #include "Mesh.h"
 #include "Solution.h"
 #include "ZoltanMeshPartitionPolicy.h"
@@ -17,9 +17,9 @@
 
 #ifdef HAVE_MPI
 #include <Teuchos_GlobalMPISession.hpp>
-#include "mpi_choice.hpp"
+//#include "mpi_choice.hpp"
 #else
-#include "choice.hpp"
+//#include "choice.hpp"
 #endif
 
 #include "InnerProductScratchPad.h"
@@ -30,7 +30,7 @@
 #include "Element.h"
 
 #include "MeshPolyOrderFunction.h"
-#include "SolutionExporter.h"
+//#include "SolutionExporter.h"
 
 #include "StandardAssembler.h"
 #include "SerialDenseWrapper.h"

@@ -174,7 +174,9 @@ enable_testing()
 add_subdirectory(drivers ${EXCLUDE_DRIVERS_FROM_ALL})
 add_subdirectory(examples)
 add_subdirectory(unit_tests)
-#add_subdirectory(slow_tests)
+if (ENABLE_PARALLEL)
+  add_subdirectory(slow_tests)
+endif()
 
 # Finish up
 set(INSTALL_CONFIG_HEADERS FALSE)

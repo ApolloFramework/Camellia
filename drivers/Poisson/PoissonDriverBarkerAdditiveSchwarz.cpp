@@ -1,11 +1,13 @@
 #include "RefinementStrategy.h"
 #include "PreviousSolutionFunction.h"
 #include "MeshFactory.h"
-#include "SolutionExporter.h"
+//#include "SolutionExporter.h"
 #include <Teuchos_GlobalMPISession.hpp>
 #include "GnuPlotUtil.h"
 
 #include "Solver.h"
+#include "GMGOperator.h"
+#include "AztecOO.h"
 #include "Ifpack_AdditiveSchwarz.h"
 #include "Ifpack_Amesos.h"
 
@@ -22,7 +24,9 @@ using namespace Camellia;
 
 Teuchos::RCP<Epetra_Operator> CamelliaAdditiveSchwarzPreconditioner(Epetra_RowMatrix* A, int overlapLevel, MeshPtr mesh, Teuchos::RCP<DofInterpreter> dofInterpreter)
 {
-  Teuchos::RCP<Ifpack_Preconditioner> preconditioner = Teuchos::rcp(new AdditiveSchwarz<Ifpack_Amesos>(A, overlapLevel, mesh, dofInterpreter) );
+  bool hierarchicalNeighborsForSchwarz = false; // default; can be overridden later
+  int dimensionForSchwarzNeighborRelationship = mesh->getTopology()->getDimension() - 1; // side dimension default
+  Teuchos::RCP<Ifpack_Preconditioner> preconditioner = Teuchos::rcp(new AdditiveSchwarz<Ifpack_Amesos>(A, overlapLevel, mesh, dofInterpreter, hierarchicalNeighborsForSchwarz, dimensionForSchwarzNeighborRelationship) );
 
   Teuchos::ParameterList List;
 

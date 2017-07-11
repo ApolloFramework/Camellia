@@ -1,7 +1,9 @@
 #include "RefinementStrategy.h"
 #include "PreviousSolutionFunction.h"
 #include "MeshFactory.h"
-#include "SolutionExporter.h"
+#include "TrigFunctions.h"
+#include "hFunction.h"
+//#include "SolutionExporter.h"
 #include <Teuchos_GlobalMPISession.hpp>
 #include "GnuPlotUtil.h"
 
@@ -23,6 +25,8 @@
 
 #include "Teuchos_CommandLineProcessor.hpp"
 #include "Teuchos_ParameterList.hpp"
+
+using namespace Camellia;
 
 static const double PI  = 3.141592653589793238462;
 
@@ -108,10 +112,10 @@ int main(int argc, char *argv[])
 
   double width = D, height = D, depth = D;
 
-  VarFactory varFactory;
+  VarFactoryPtr varFactory = VarFactory::varFactory();
   // fields:
-  VarPtr u = varFactory.fieldVar("u", L2);
-  VarPtr sigma = varFactory.fieldVar("\\sigma", VECTOR_L2);
+  VarPtr u = varFactory->fieldVar("u", L2);
+  VarPtr sigma = varFactory->fieldVar("\\sigma", VECTOR_L2);
 
   FunctionPtr n = Function::normal();
   // traces:
@@ -119,18 +123,18 @@ int main(int argc, char *argv[])
 
   if (conformingTraces)
   {
-    u_hat = varFactory.traceVar("\\widehat{u}", u);
+    u_hat = varFactory->traceVar("\\widehat{u}", u);
   }
   else
   {
     cout << "Note: using non-conforming traces.\n";
-    u_hat = varFactory.traceVar("\\widehat{u}", u, L2);
+    u_hat = varFactory->traceVar("\\widehat{u}", u, L2);
   }
-  VarPtr sigma_n_hat = varFactory.fluxVar("\\widehat{\\sigma}_{n}", sigma * n);
+  VarPtr sigma_n_hat = varFactory->fluxVar("\\widehat{\\sigma}_{n}", sigma * n);
 
   // test functions:
-  VarPtr tau = varFactory.testVar("\\tau", HDIV);
-  VarPtr v = varFactory.testVar("v", HGRAD);
+  VarPtr tau = varFactory->testVar("\\tau", HDIV);
+  VarPtr v = varFactory->testVar("v", HGRAD);
 
   BFPtr poissonBF = Teuchos::rcp( new BF(varFactory) );
   FunctionPtr alpha = Function::constant(1); // viscosity

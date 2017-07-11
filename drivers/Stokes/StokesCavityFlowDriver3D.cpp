@@ -19,13 +19,15 @@
 #include "HDF5Exporter.h"
 #endif
 
-#include "IndexType.h"
+//#include "IndexType.h"
 
 #include "CondensedDofInterpreter.h"
 
 #ifdef WATCH_BGQ_FLOP_COUNTERS
 
 #endif
+
+using namespace Camellia;
 
 class TopBoundary : public SpatialFilter
 {

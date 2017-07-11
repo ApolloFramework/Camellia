@@ -6,8 +6,8 @@
 //  Copyright (c) 2012 __MyCompanyName__. All rights reserved.
 //
 
-#include "choice.hpp"
-#include "mpi_choice.hpp"
+//#include "choice.hpp"
+//#include "mpi_choice.hpp"
 
 #include "RefinementStrategy.h"
 #include "RefinementPattern.h"
@@ -43,6 +43,7 @@
 #endif
 
 using namespace std;
+using namespace Camellia;
 
 static double tol=1e-14;
 

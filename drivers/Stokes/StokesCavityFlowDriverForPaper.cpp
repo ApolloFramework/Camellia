@@ -1,9 +1,12 @@
+#include "SimpleFunction.h"
 #include "RefinementStrategy.h"
 #include "PreviousSolutionFunction.h"
 #include "MeshFactory.h"
 #include "HDF5Exporter.h"
 #include <Teuchos_GlobalMPISession.hpp>
 #include "GnuPlotUtil.h"
+
+using namespace Camellia;
 
 class TopBoundary : public SpatialFilter
 {
@@ -15,7 +18,7 @@ public:
   }
 };
 
-class RampBoundaryFunction_U1 : public SimpleFunction
+class RampBoundaryFunction_U1 : public SimpleFunction<double>
 {
   double _eps; // ramp width
 public:

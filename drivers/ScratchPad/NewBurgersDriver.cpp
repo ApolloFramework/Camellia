@@ -1,4 +1,4 @@
-#include "OptimalInnerProduct.h"
+#include "MathInnerProduct.h"
 #include "Mesh.h"
 #include "Solution.h"
 #include "ZoltanMeshPartitionPolicy.h"
@@ -31,6 +31,7 @@
 #include <sstream>
 
 #include "MeshUtilities.h"
+
 using namespace std;
 
 class PositivePart : public Function
@@ -75,7 +76,7 @@ public:
   {
     // should probably by sqrt(_epsilon/h) instead (note parentheses)
     // but this is what was in the old code, so sticking with it for now.
-    double scaling = min(_epsilon/(h*h), 1.0);
+    double scaling = std::min(_epsilon/(h*h), 1.0);
     // since this is used in inner product term a like (a,a), take square root
     return sqrt(scaling);
   }

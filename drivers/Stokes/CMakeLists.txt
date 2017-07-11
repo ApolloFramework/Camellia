@@ -26,8 +26,8 @@ target_link_libraries(StokesCavityFlowGMGDriver
   Camellia
 )
 
-set( STOKES_CAVITY_FLOW_DRIVER_3D "StokesCavityFlowDriver3D.cpp" )
-add_executable(StokesCavityFlowDriver3D ${STOKES_CAVITY_FLOW_DRIVER_3D})
-target_link_libraries(StokesCavityFlowDriver3D 
-  Camellia
-)
+#set( STOKES_CAVITY_FLOW_DRIVER_3D "StokesCavityFlowDriver3D.cpp" )
+#add_executable(StokesCavityFlowDriver3D ${STOKES_CAVITY_FLOW_DRIVER_3D})
+#target_link_libraries(StokesCavityFlowDriver3D 
+#  Camellia
+#)

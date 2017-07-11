@@ -1,4 +1,4 @@
-#include "OptimalInnerProduct.h"
+#include "MathInnerProduct.h"
 #include "Mesh.h"
 #include "Solution.h"
 
@@ -22,6 +22,8 @@
 
 #include "TestingUtilities.h"
 #include "FiniteDifferenceUtilities.h"
+
+using namespace Camellia;
 
 typedef Teuchos::RCP<shards::CellTopology> CellTopoPtrLegacy;
 

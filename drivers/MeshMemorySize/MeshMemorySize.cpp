@@ -1,6 +1,7 @@
 #include "MeshTopology.h"
 
 using namespace std;
+using namespace Camellia;
 
 vector<double> makeVertex(double v0)
 {
@@ -64,8 +65,9 @@ MeshTopologyPtr makeQuadMesh(double x0, double y0, double width, double height,
     for (unsigned j=0; j<verticalCells; j++)
     {
       double y = y0 + dy * j;
+      IndexType cellIDZero = 0;
       vector< vector<double> > vertices = quadPoints(x, y, dx, dy);
-      mesh->addCell(quadTopo, vertices);
+      mesh->addCell(cellIDZero, quadTopo, vertices);
     }
   }
   return mesh;
@@ -89,8 +91,9 @@ MeshTopologyPtr makeHexMesh(double x0, double y0, double z0, double width, doubl
       for (unsigned k=0; k<depthCells; k++)
       {
         double z = z0 + dz * k;
+        IndexType cellIDZero = 0;
         vector< vector<double> > vertices = hexPoints(x, y, z, dx, dy, dz);
-        mesh->addCell(hexTopo, vertices);
+        mesh->addCell(cellIDZero, hexTopo, vertices);
       }
     }
   }
@@ -102,7 +105,8 @@ void refineUniformly(MeshTopologyPtr mesh)
   set<unsigned> cellIndices = mesh->getActiveCellIndices();
   for (set<unsigned>::iterator cellIt = cellIndices.begin(); cellIt != cellIndices.end(); cellIt++)
   {
-    mesh->refineCell(*cellIt, RefinementPattern::regularRefinementPatternHexahedron());
+    GlobalIndexType nextCellID = mesh->cellCount();
+    mesh->refineCell(*cellIt, RefinementPattern::regularRefinementPatternHexahedron(), nextCellID);
   }
 }
 
@@ -169,7 +173,8 @@ int main(int argc, char *argv[])
       set<IndexType> activeCells = mesh->getActiveCellIndices();
       for (set<IndexType>::iterator cellIDIt = activeCells.begin(); cellIDIt != activeCells.end(); cellIDIt++)
       {
-        mesh->refineCell(*cellIDIt, regularQuadRefPattern);
+        GlobalIndexType nextCellID = mesh->cellCount();
+        mesh->refineCell(*cellIDIt, regularQuadRefPattern, nextCellID);
       }
 
       horizontalCells *= 2;
@@ -236,7 +241,8 @@ int main(int argc, char *argv[])
       set<IndexType> activeCells = mesh->getActiveCellIndices();
       for (set<IndexType>::iterator cellIDIt = activeCells.begin(); cellIDIt != activeCells.end(); cellIDIt++)
       {
-        mesh->refineCell(*cellIDIt, regularHexRefPattern);
+        GlobalIndexType nextCellID = mesh->cellCount();
+        mesh->refineCell(*cellIDIt, regularHexRefPattern, nextCellID);
       }
 
       horizontalCells *= 2;
