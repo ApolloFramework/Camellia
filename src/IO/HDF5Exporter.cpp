@@ -78,16 +78,22 @@ HDF5Exporter::~HDF5Exporter()
 
 void HDF5Exporter::exportSolution(TSolutionPtr<double> solution, double timeVal, unsigned int defaultNum1DPts, map<int, int> cellIDToNum1DPts, set<GlobalIndexType> cellIndices)
 {
+  int step = 0;
   // TODO: change this to get VarFactoryPtr from solution
+  std::cout << "At Step " << step << std::endl; ++step;
   VarFactoryPtr varFactory = _mesh->bilinearForm()->varFactory();
+  std::cout << "At Step " << step << std::endl; ++step;
 
   vector<int> fieldTrialIDs = _mesh->bilinearForm()->trialVolumeIDs();
   vector<int> traceTrialIDs = _mesh->bilinearForm()->trialBoundaryIDs();
   vector<VarPtr> fieldVars;
   vector<VarPtr> traceVars;
+  std::cout << "At Step " << step << std::endl; ++step;
+
 
   vector<TFunctionPtr<double>> fieldFunctions;
   vector<string> fieldFunctionNames;
+  std::cout << "At Step " << step << std::endl; ++step;
   for (int i=0; i < fieldTrialIDs.size(); i++)
   {
     fieldVars.push_back(varFactory->trial(fieldTrialIDs[i]));
@@ -96,8 +102,11 @@ void HDF5Exporter::exportSolution(TSolutionPtr<double> solution, double timeVal,
     fieldFunctions.push_back(fieldFunction);
     fieldFunctionNames.push_back(fieldFunctionName);
   }
+  std::cout << "At Step " << step << std::endl; ++step;
   vector<TFunctionPtr<double>> traceFunctions;
   vector<string> traceFunctionNames;
+  std::cout << "At Step " << step << std::endl; ++step;
+
   for (int i=0; i < traceTrialIDs.size(); i++)
   {
     traceVars.push_back(varFactory->trial(traceTrialIDs[i]));
@@ -106,10 +115,16 @@ void HDF5Exporter::exportSolution(TSolutionPtr<double> solution, double timeVal,
     traceFunctions.push_back(traceFunction);
     traceFunctionNames.push_back(traceFunctionName);
   }
+  std::cout << "At Step " << step << std::endl; ++step;
+
   if (fieldFunctions.size() > 0)
     exportFunction(fieldFunctions, fieldFunctionNames, timeVal, defaultNum1DPts, cellIDToNum1DPts, cellIndices);
+  std::cout << "At Step " << step << std::endl; ++step;
+
   if (traceFunctions.size() > 0)
     exportFunction(traceFunctions, traceFunctionNames, timeVal, defaultNum1DPts, cellIDToNum1DPts, cellIndices);
+  std::cout << "At Step " << step << std::endl; ++step;
+
 }
 
 void HDF5Exporter::exportSolution(TSolutionPtr<double> solution, VarFactoryPtr varFactory, double timeVal, unsigned int defaultNum1DPts, map<int, int> cellIDToNum1DPts, set<GlobalIndexType> cellIndices)
@@ -130,10 +145,14 @@ void HDF5Exporter::exportFunction(TFunctionPtr<double> function, string function
 
 void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector<string> functionNames, double timeVal, unsigned int defaultNum1DPts, map<int, int> cellIDToNum1DPts, set<GlobalIndexType> cellIndices)
 {
+  int step = 0;
+  std::cout << "At Function Step " << step << std::endl; ++step;
   int commRank = Teuchos::GlobalMPISession::getRank();
   int numProcs = Teuchos::GlobalMPISession::getNProc();
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   bool exportingBoundaryValues = functions[0]->boundaryValueOnly();
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   Teuchos::XMLObject partitionCollection("Grid");
   if (commRank == 0)
@@ -142,6 +161,8 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
     {
       if (!_fieldTimeVals.count(timeVal))
       {
+  std::cout << "At Function Step " << step << std::endl; ++step;
+
         _fieldGrids.addChild(partitionCollection);
         stringstream timeName;
         timeName << "Time" << timeVal;
@@ -160,6 +181,8 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
           partitionFileName << "XMF/field" << "-part" << p << "-time" << timeVal << ".xmf";
           xiinclude.addAttribute("href", partitionFileName.str());
         }
+	std::cout << "At Function Step " << step << std::endl; ++step;
+
       }
       else
         TEUCHOS_TEST_FOR_EXCEPTION(true, std::invalid_argument, "Field collection at timeVal already inserted");
@@ -168,6 +191,8 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
     {
       if (!_traceTimeVals.count(timeVal))
       {
+  std::cout << "At Function Step " << step << std::endl; ++step;
+
         _traceGrids.addChild(partitionCollection);
         stringstream timeName;
         timeName << "Time" << timeVal;
@@ -186,11 +211,15 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
           partitionFileName << "XMF/trace" << "-part" << p << "-time" << timeVal << ".xmf";
           xiinclude.addAttribute("href", partitionFileName.str());
         }
+  std::cout << "At Function Step " << step << std::endl; ++step;
       }
       else
         TEUCHOS_TEST_FOR_EXCEPTION(true, std::invalid_argument, "Trace collection at timeVal already inserted");
     }
   }
+  std::cout << "At Function Step " << step << std::endl; ++step;
+
+
   ofstream gridFile;
   stringstream partitionFileName;
   if (!exportingBoundaryValues)
@@ -203,17 +232,23 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
   gridName << "Time" << timeVal << "Partition" << commRank;
   grid.addAttribute("Name", gridName.str());
   grid.addAttribute("GridType", "Uniform");
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   int nFcns = functions.size();
+  std::cout << "At Function Step " << step << std::endl; ++step;
+
 
   if (defaultNum1DPts < 2)
     defaultNum1DPts = 2;
 
   int spaceDim = _mesh->getTopology()->getDimension();
+  std::cout << "At Function Step " << step << std::endl; ++step;
+
 
   for (int i=0; i < nFcns; i++)
     if (exportingBoundaryValues != functions[i]->boundaryValueOnly())
       TEUCHOS_TEST_FOR_EXCEPTION(true, std::invalid_argument, "Can not export trace and field variables together");
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   stringstream h5OutRel, h5OutFull, connOutRel2, connOutFull2;//, ptOutRel, ptOutFull;
   if (!exportingBoundaryValues)
@@ -226,13 +261,16 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
     h5OutRel << "HDF5/" << "trace-part" << commRank << "-time" << timeVal << ".h5";
     h5OutFull << _dirSuperPath << "/" << _dirName << "/" << h5OutRel.str();
   }
+  std::cout << "At Function Step " << step << std::endl; ++step;
   Epetra_SerialComm Comm;
   EpetraExt::HDF5 hdf5(Comm);
   hdf5.Create(h5OutFull.str());
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   unsigned int total_vertices = 0;
 
   if (cellIndices.size()==0) cellIndices = _mesh->globalDofAssignment()->cellsInPartition(commRank);
+  std::cout << "At Function Step " << step << std::endl; ++step;
   // Number of line elements in 1D mesh
   int numLines=0;
   // Number of triangle elements in 2D mesh
@@ -269,6 +307,7 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
   int totalBoundaryQuads=0;
   // Total number of boundary tris in 3D mesh
   int totalBoundaryTriangles=0;
+  std::cout << "At Function Step " << step << std::endl; ++step;
   for (set<GlobalIndexType>::iterator cellIt = cellIndices.begin(); cellIt != cellIndices.end(); cellIt++)
   {
     CellPtr cell = _mesh->getTopology()->getCell(*cellIt);
@@ -467,6 +506,7 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
 
   }
   totalSubcells = totalBoundaryPts + totalSubLines + totalSubTriangles + totalSubQuads + totalSubTets + totalSubWedges + totalSubHexas;
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   // Topology
   Teuchos::XMLObject topology("Topology");
@@ -488,6 +528,7 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
     else if (spaceDim == 3)
       topology.addInt("Dimensions", totalSubQuads + totalSubTriangles);
   }
+  std::cout << "At Function Step " << step << std::endl; ++step;
   hsize_t connDimsf;
   if (!exportingBoundaryValues)
   {
@@ -505,6 +546,7 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
     if (spaceDim == 3)
       connDimsf = 5*totalSubQuads + 4*totalSubTriangles;
   }
+  std::cout << "At Function Step " << step << std::endl; ++step;
   vector<int> connArray(connDimsf);
   Teuchos::XMLObject topoDataItem("DataItem");
   topology.addChild(topoDataItem);
@@ -516,8 +558,10 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
   stringstream connOutRel;
   connOutRel << h5OutRel.str() << ":/Data/Conns";
   topoDataItem.addContent(connOutRel.str());
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   // Geometry
+  // Segfault appears to be in this block...
   Teuchos::XMLObject geometry("Geometry");
   grid.addChild(geometry);
   if (spaceDim < 3)
@@ -529,7 +573,9 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
     ptDimsf = 2 * totalPts;
   else
     ptDimsf = spaceDim * totalPts;
-  double ptArray[ptDimsf];
+  std::cout << "Number of points in geometry" << ptDimsf << std::endl;
+  vector<double> ptArray(ptDimsf);
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   Teuchos::XMLObject geoDataItem("DataItem");
   geometry.addChild(geoDataItem);
@@ -537,10 +583,13 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
   geoDataItem.addAttribute("Format", "HDF");
   geoDataItem.addAttribute("NumberType", "Float");
   geoDataItem.addAttribute("Precision", "8");
+  std::cout << "Adding dimensions..." << std::endl;
   geoDataItem.addInt("Dimensions", ptDimsf);
   stringstream ptOutRel;
+  std::cout << "Creating string" << std::endl;
   ptOutRel << h5OutRel.str() << ":/Data/Points";
   geoDataItem.addContent(ptOutRel.str());
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   // Node Data
   vector<Teuchos::XMLObject> vals;
@@ -551,11 +600,12 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
     vals[i].addAttribute("Name", functionNames[i].c_str());
     vals[i].addAttribute("Center", "Node");
   }
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   vector< vector<double> > valArrays;
   valArrays.resize(nFcns);
-  hsize_t valDimsf[nFcns];
-  int numFcnComponents[nFcns];
+  vector<hsize_t> valDimsf(nFcns);
+  vector<int> numFcnComponents(nFcns);
   for (int i = 0; i < nFcns; i++)
   {
     if (functions[i]->rank() == 0)
@@ -594,12 +644,14 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
     valOutRel << h5OutRel.str() << ":/Data/" << functionNames[i];
     valDataItem.addContent(valOutRel.str());
   }
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   int connIndex = 0;
   int ptIndex = 0;
-  int valIndex[nFcns];
+  vector<int> valIndex(nFcns);
   for (int i = 0; i < nFcns; i++)
     valIndex[i] = 0;
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   for (set<GlobalIndexType>::iterator cellIt = cellIndices.begin(); cellIt != cellIndices.end(); cellIt++)
   {
@@ -1024,6 +1076,7 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
       }
     }
   }
+  std::cout << "At Function Step " << step << std::endl; ++step;
   if (connDimsf > 0)
   {
     hdf5.Write("Data", "Conns", H5T_NATIVE_INT, connDimsf, &connArray[0]);
@@ -1032,6 +1085,7 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
       hdf5.Write("Data", functionNames[i], H5T_NATIVE_DOUBLE, valDimsf[i], &valArrays[i][0]);
   }
   hdf5.Close();
+  std::cout << "At Function Step " << step << std::endl; ++step;
 
   gridFile << grid.toString();
   gridFile.close();
@@ -1057,6 +1111,7 @@ void HDF5Exporter::exportFunction(vector<TFunctionPtr<double>> functions, vector
       xmfTraceFile.close();
     }
   }
+  std::cout << "At Function Step " << step << std::endl; ++step;
 }
 
 void HDF5Exporter::exportTimeSlab(TFunctionPtr<double> function, string functionName, double tInit, double tFinal, unsigned int numSlices, unsigned int sliceH1Order, unsigned int defaultNum1DPts)
@@ -1095,9 +1150,14 @@ void HDF5Exporter::exportFunction(string superDirectory, string functionName, TF
 
 void HDF5Exporter::exportSolution(std::string superDirectory, std::string solnName, TSolutionPtr<double> solution)
 {
+  std::cout << "HDF5Exporter::exportSolution: superDirectory = " << superDirectory << std::endl;
+  std::cout << "HDF5Exporter::exportSolution: solnName = " << solnName << std::endl;
   MeshPtr mesh = solution->mesh();
+  std::cout << "HDF5Exporter::exportSolution: got Mesh" << std::endl;
   HDF5Exporter exporter(mesh, solnName, superDirectory);
+  std::cout << "HDF5Exporter::exportSolution: created exporter" << std::endl;
   exporter.exportSolution(solution, mesh->bilinearForm()->varFactory());
+  std::cout << "HDF5Exporter::exportSolution: exported!" << std::endl;
 }
 
 void HDF5Exporter::getPoints(Intrepid::FieldContainer<double> &points, CellTopoPtr cellTopo, int num1DPts)
